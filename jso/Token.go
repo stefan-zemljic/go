@@ -14,10 +14,31 @@ const (
 	Bool
 	Number
 	String
-	Array
-	Object
+	Arr
+	Obj
 	End
 )
+
+func (t TokenKind) String() string {
+	switch t {
+	case Null:
+		return "Null"
+	case Bool:
+		return "Bool"
+	case Number:
+		return "Number"
+	case String:
+		return "String"
+	case Arr:
+		return "Arr"
+	case Obj:
+		return "Obj"
+	case End:
+		return "End"
+	default:
+		panic(fmt.Sprintf("invalid TokenKind %d", t))
+	}
+}
 
 type number string
 
@@ -33,10 +54,10 @@ func (t Token) Kind() TokenKind {
 		return String
 	case TokenKind:
 		switch c {
-		case Array:
-			return Array
-		case Object:
-			return Object
+		case Arr:
+			return Arr
+		case Obj:
+			return Obj
 		case End:
 			return End
 		default:

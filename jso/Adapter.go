@@ -1,10 +1,6 @@
 package jso
 
-import (
-	"reflect"
-)
-
 type Adapter interface {
-	Read(reflect.Type, Stream) (any, bool)
-	Write(any, Stream) bool
+	Write(registry *Registry, buffer *Buffer, value any)
+	Read(registry *Registry, data *Data) any
 }

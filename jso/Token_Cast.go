@@ -4,13 +4,13 @@ import (
 	"strconv"
 )
 
-func (t Token) AsNull() bool {
+func (t Token) Null() bool {
 	if t.data == nil {
 		return true
 	}
 	return false
 }
-func (t Token) AsBool() (bool, bool) {
+func (t Token) Bool() (bool, bool) {
 	if v, ok := t.data.(bool); ok {
 		return v, true
 	}
@@ -20,7 +20,7 @@ func (t Token) AsInt(bitSize int) (int, bool)     { return asInt[int](t, bitSize
 func (t Token) AsInt8(bitSize int) (int8, bool)   { return asInt[int8](t, bitSize) }
 func (t Token) AsInt16(bitSize int) (int16, bool) { return asInt[int16](t, bitSize) }
 func (t Token) AsInt32(bitSize int) (int32, bool) { return asInt[int32](t, bitSize) }
-func (t Token) AsInt64(bitSize int) (int64, bool) { return asInt[int64](t, bitSize) }
+func (t Token) Int64(bitSize int) (int64, bool)   { return asInt[int64](t, bitSize) }
 func asInt[T interface {
 	int | int8 | int16 | int32 | int64
 }](t Token, bitSize int) (T, bool) {
@@ -39,7 +39,7 @@ func (t Token) AsUint(bitSize int) (uint, bool)       { return genUint[uint](t, 
 func (t Token) AsUint8(bitSize int) (uint8, bool)     { return genUint[uint8](t, bitSize) }
 func (t Token) AsUint16(bitSize int) (uint16, bool)   { return genUint[uint16](t, bitSize) }
 func (t Token) AsUint32(bitSize int) (uint32, bool)   { return genUint[uint32](t, bitSize) }
-func (t Token) AsUint64(bitSize int) (uint64, bool)   { return genUint[uint64](t, bitSize) }
+func (t Token) Uint64(bitSize int) (uint64, bool)     { return genUint[uint64](t, bitSize) }
 func (t Token) AsUintptr(bitSize int) (uintptr, bool) { return genUint[uintptr](t, bitSize) }
 func genUint[T interface {
 	uint | uint8 | uint16 | uint32 | uint64 | uintptr
@@ -56,7 +56,7 @@ func genUint[T interface {
 	}
 }
 func (t Token) AsFloat32(bitSize int) (float32, bool) { return genFloat[float32](t, bitSize) }
-func (t Token) AsFloat64(bitSize int) (float64, bool) { return genFloat[float64](t, bitSize) }
+func (t Token) Float64(bitSize int) (float64, bool)   { return genFloat[float64](t, bitSize) }
 func genFloat[T interface{ float32 | float64 }](t Token, bitSize int) (T, bool) {
 	switch v := t.data.(type) {
 	case number:
@@ -69,7 +69,7 @@ func genFloat[T interface{ float32 | float64 }](t Token, bitSize int) (T, bool) 
 		return 0, false
 	}
 }
-func (t Token) AsNumber() (string, bool) {
+func (t Token) Number() (string, bool) {
 	switch v := t.data.(type) {
 	case number:
 		return string(v), true
@@ -77,25 +77,25 @@ func (t Token) AsNumber() (string, bool) {
 		return "", false
 	}
 }
-func (t Token) AsString() (string, bool) {
+func (t Token) String() (string, bool) {
 	if v, ok := t.data.(string); ok {
 		return v, true
 	}
 	return "", false
 }
-func (t Token) AsArray() bool {
-	if c, ok := t.data.(TokenKind); ok && c == Array {
+func (t Token) Arr() bool {
+	if c, ok := t.data.(TokenKind); ok && c == Arr {
 		return true
 	}
 	return false
 }
-func (t Token) AsObject() bool {
-	if c, ok := t.data.(TokenKind); ok && c == Object {
+func (t Token) Obj() bool {
+	if c, ok := t.data.(TokenKind); ok && c == Obj {
 		return true
 	}
 	return false
 }
-func (t Token) AsEnd() bool {
+func (t Token) End() bool {
 	if c, ok := t.data.(TokenKind); ok && c == End {
 		return true
 	}

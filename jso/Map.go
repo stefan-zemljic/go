@@ -86,28 +86,3 @@ func (s *Map[K, V]) Iter(fn func(K, V) bool) {
 		}
 	}
 }
-func (s *Map[K, V]) ToWriter(w *Writer) {
-	w.Add(Object)
-	for _, entry := range s.entries {
-		w.Add(entry.Key)
-		w.Add(entry.Value)
-	}
-	w.Add(End)
-}
-func (s *Map[K, V]) To(st *Stream) {
-	st.Add(Object)
-	for _, entry := range s.entries {
-		st.AddAll(entry.Key, entry.Value)
-	}
-	st.Add(End)
-}
-func (s *Map[K, V]) Pretty() string {
-	var w Writer
-	s.ToWriter(&w)
-	return w.Pretty()
-}
-func (s *Map[K, V]) String() string {
-	var w Writer
-	s.ToWriter(&w)
-	return w.String()
-}

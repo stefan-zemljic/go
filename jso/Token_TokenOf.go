@@ -31,6 +31,8 @@ func TokenOf(v any) Token {
 		return Token{number(strconv.FormatUint(uint64(v), 10))}
 	case uint64:
 		return Token{number(strconv.FormatUint(v, 10))}
+	case uintptr:
+		return Token{number(strconv.FormatUint(uint64(v), 10))}
 	case float32:
 		return Token{number(strconv.FormatFloat(float64(v), 'g', -1, 32))}
 	case float64:
@@ -39,7 +41,7 @@ func TokenOf(v any) Token {
 		return Token{v}
 	case TokenKind:
 		switch v {
-		case Array, Object, End:
+		case Arr, Obj, End:
 			return Token{data: v}
 		default:
 			panic(fmt.Sprintf("token kind %d cannot be used as value", v))

@@ -4,47 +4,47 @@ import (
 	"fmt"
 )
 
-func (t Token) AddTo(w *Writer) {
+func (t Token) AddTo(b *Buffer) {
 	if t == (Token{End}) {
-		state := w.State
+		state := b.State
 		switch {
 		case state.InObject():
-			w.Append('}')
+			b.Append('}')
 		case state.InArray():
-			w.Append(']')
+			b.Append(']')
 		default:
 			panic("cannot end because neither in object nor in array")
 		}
-		w.PopState()
+		b.PopState()
 		return
 	}
 	switch v := t.data.(type) {
 	case nil:
-		w.BeforeValue(false)
-		w.AppendString("null")
+		b.BeforeValue(false)
+		b.AppendString("null")
 	case bool:
-		w.BeforeValue(false)
+		b.BeforeValue(false)
 		if v {
-			w.AppendString("true")
+			b.AppendString("true")
 		} else {
-			w.AppendString("false")
+			b.AppendString("false")
 		}
 	case number:
-		w.BeforeValue(false)
-		w.AppendString(string(v))
+		b.BeforeValue(false)
+		b.AppendString(string(v))
 	case string:
-		w.BeforeValue(true)
-		w.JsonEscape(v)
+		b.BeforeValue(true)
+		b.JsonEscape(v)
 	case TokenKind:
 		switch v {
-		case Array:
-			w.BeforeValue(false)
-			w.PushState(AtArrayStart)
-			w.Append('[')
-		case Object:
-			w.BeforeValue(false)
-			w.PushState(AtObjectStart)
-			w.Append('{')
+		case Arr:
+			b.BeforeValue(false)
+			b.PushState(AtArrayStart)
+			b.Append('[')
+		case Obj:
+			b.BeforeValue(false)
+			b.PushState(AtObjectStart)
+			b.Append('{')
 		default:
 			panic(fmt.Sprintf("invalid token %v", t))
 		}
