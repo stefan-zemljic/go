@@ -1,7 +1,6 @@
 go 1.24
 use (
-	env
-	jso
-	openapi
-	radix
+shallow
+env
+jso
 )
