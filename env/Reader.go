@@ -32,6 +32,7 @@ func Read(target any) {
 		if field.Kind() != reflect.String {
 			panic(fmt.Sprintf("field %q is not a string", name))
 		}
+		field.SetString(value)
 	}
 }
 

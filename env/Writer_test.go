@@ -9,12 +9,12 @@ import (
 	"testing"
 )
 
-func TestEmitterSetUnset(t *testing.T) {
-	e := &Emitter{}
-	e.Set("GREETING", "Hello World")
-	e.Set("DEBUG", "true")
-	e.Unset("DEBUG")
-	script := e.String()
+func TestWriterSetUnset(t *testing.T) {
+	w := &Writer{}
+	w.Set("GREETING", "Hello World")
+	w.Set("DEBUG", "true")
+	w.Unset("DEBUG")
+	script := w.String()
 	if !strings.Contains(script, "hex2str") {
 		t.Errorf("expected script to contain hex2str function, got:\n%s", script)
 	} else if !strings.Contains(script, "export GREETING=$(hex2str") {
@@ -40,32 +40,32 @@ func TestEmitterSetUnset(t *testing.T) {
 		t.Errorf("expected %q, got %q", want, got)
 	}
 }
-func TestEmitterSetAndUnsetBranches(t *testing.T) {
-	e := &Emitter{}
-	e.Set("FOO", "bar")
-	e.Set("BAZ", "qux")
-	e.Unset("FOO")
-	e.Reset()
-	e.Unset("DEBUG")
-	script := e.String()
+func TestWriterSetAndUnsetBranches(t *testing.T) {
+	w := &Writer{}
+	w.Set("FOO", "bar")
+	w.Set("BAZ", "qux")
+	w.Unset("FOO")
+	w.Reset()
+	w.Unset("DEBUG")
+	script := w.String()
 	if !strings.Contains(script, "hex2str") {
 		t.Errorf("expected embedded hex2str function in script")
 	} else if !strings.Contains(script, "unset DEBUG") {
 		t.Errorf("expected unset DEBUG after Reset, got:\n%s", script)
 	}
 }
-func TestEmitterBytesAndString(t *testing.T) {
-	e := &Emitter{}
-	e.Set("FOO", "bar")
-	if string(e.Bytes()) != e.String() {
+func TestWriterBytesAndString(t *testing.T) {
+	w := &Writer{}
+	w.Set("FOO", "bar")
+	if string(w.Bytes()) != w.String() {
 		t.Errorf("Bytes and String mismatch")
 	}
 }
-func TestEmitterWriteTo(t *testing.T) {
-	e := &Emitter{}
-	e.Set("FOO", "bar")
+func TestWriterWriteTo(t *testing.T) {
+	w := &Writer{}
+	w.Set("FOO", "bar")
 	var buf bytes.Buffer
-	n, err := e.WriteTo(&buf)
+	n, err := w.WriteTo(&buf)
 	if err != nil {
 		t.Fatalf("WriteTo error: %v", err)
 	} else if int64(buf.Len()) != n {
@@ -74,18 +74,18 @@ func TestEmitterWriteTo(t *testing.T) {
 		t.Errorf("WriteTo output missing FOO, got:\n%s", buf.String())
 	}
 }
-func TestEmitterWrite(t *testing.T) {
-	e := &Emitter{}
-	_, _ = e.Write([]byte("hello"))
-	if !strings.Contains(e.String(), "hello") {
-		t.Errorf("expected 'hello' in buffer, got:\n%s", e.String())
+func TestWriterWrite(t *testing.T) {
+	w := &Writer{}
+	_, _ = w.Write([]byte("hello"))
+	if !strings.Contains(w.String(), "hello") {
+		t.Errorf("expected 'hello' in buffer, got:\n%s", w.String())
 	}
 }
-func TestEmitterIntegration(t *testing.T) {
-	e := &Emitter{}
-	e.Set("GREETING", "Hello World")
-	e.Unset("DEBUG")
-	script := e.String()
+func TestWriterIntegration(t *testing.T) {
+	w := &Writer{}
+	w.Set("GREETING", "Hello World")
+	w.Unset("DEBUG")
+	script := w.String()
 	got := runScript(t, script+`
 		echo "$GREETING"
 	`)
