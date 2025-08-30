@@ -6,17 +6,10 @@ import (
 	"testing"
 )
 
-type good struct {
-	Name string
-}
-type notString struct {
-	Name int
-}
-type unexported struct {
-	name string
-}
-
 func TestRead_Success(t *testing.T) {
+	type good struct {
+		Name string
+	}
 	err := os.Setenv("NAME", "hello")
 	if err != nil {
 		t.Fatalf("failed to set env var: %v", err)
@@ -33,16 +26,24 @@ func TestRead_Success(t *testing.T) {
 		t.Errorf("expected hello, got %q", g.Name)
 	}
 }
+
 func TestRead_TargetNotPointerPanics(t *testing.T) {
+	type good struct {
+		Name string
+	}
 	defer func() {
 		if r := recover(); r == nil {
 			t.Errorf("expected panic, got none")
 		}
 	}()
 	var g good
-	Read(g) // not a pointer
+	Read(g)
 }
+
 func TestRead_TargetNilPointerPanics(t *testing.T) {
+	type good struct {
+		Name string
+	}
 	defer func() {
 		if r := recover(); r == nil {
 			t.Errorf("expected panic, got none")
@@ -61,7 +62,11 @@ func TestRead_TargetNotStructPanics(t *testing.T) {
 	x := 42
 	Read(&x)
 }
+
 func TestRead_FieldCannotBeSetPanics(t *testing.T) {
+	type unexported struct {
+		name string
+	}
 	defer func() {
 		if r := recover(); r == nil {
 			t.Errorf("expected panic, got none")
@@ -70,7 +75,11 @@ func TestRead_FieldCannotBeSetPanics(t *testing.T) {
 	var u unexported
 	Read(&u)
 }
+
 func TestRead_EnvVarNotSetPanics(t *testing.T) {
+	type good struct {
+		Name string
+	}
 	defer func() {
 		if r := recover(); r == nil {
 			t.Errorf("expected panic, got none")
@@ -79,7 +88,11 @@ func TestRead_EnvVarNotSetPanics(t *testing.T) {
 	var g good
 	Read(&g)
 }
+
 func TestRead_FieldNotStringPanics(t *testing.T) {
+	type notString struct {
+		Name int
+	}
 	defer func() {
 		if r := recover(); r == nil {
 			t.Errorf("expected panic, got none")
@@ -92,6 +105,7 @@ func TestRead_FieldNotStringPanics(t *testing.T) {
 	var ns notString
 	Read(&ns)
 }
+
 func TestUpperSnakeCase(t *testing.T) {
 	cases := map[string]string{
 		"Name":    "NAME",
@@ -106,6 +120,7 @@ func TestUpperSnakeCase(t *testing.T) {
 		}
 	}
 }
+
 func TestUpperSnakeCaseUnderscoreInsertion(t *testing.T) {
 	got := upperSnakeCase("GoLang")
 	want := "GO_LANG"
@@ -113,11 +128,13 @@ func TestUpperSnakeCaseUnderscoreInsertion(t *testing.T) {
 		t.Errorf("expected %q, got %q", want, got)
 	}
 }
+
 func TestUpperSnakeCaseEmpty(t *testing.T) {
 	if got := upperSnakeCase(""); got != "" {
 		t.Errorf("expected empty string, got %q", got)
 	}
 }
+
 func TestReadTypeSignature(t *testing.T) {
 	typ := reflect.TypeOf(Read)
 	if typ.Kind() != reflect.Func {

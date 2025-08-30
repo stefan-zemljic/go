@@ -40,6 +40,7 @@ func TestWriterSetUnset(t *testing.T) {
 		t.Errorf("expected %q, got %q", want, got)
 	}
 }
+
 func TestWriterSetAndUnsetBranches(t *testing.T) {
 	w := &Writer{}
 	w.Set("FOO", "bar")
@@ -54,6 +55,7 @@ func TestWriterSetAndUnsetBranches(t *testing.T) {
 		t.Errorf("expected unset DEBUG after Reset, got:\n%s", script)
 	}
 }
+
 func TestWriterBytesAndString(t *testing.T) {
 	w := &Writer{}
 	w.Set("FOO", "bar")
@@ -61,6 +63,7 @@ func TestWriterBytesAndString(t *testing.T) {
 		t.Errorf("Bytes and String mismatch")
 	}
 }
+
 func TestWriterWriteTo(t *testing.T) {
 	w := &Writer{}
 	w.Set("FOO", "bar")
@@ -74,6 +77,7 @@ func TestWriterWriteTo(t *testing.T) {
 		t.Errorf("WriteTo output missing FOO, got:\n%s", buf.String())
 	}
 }
+
 func TestWriterWrite(t *testing.T) {
 	w := &Writer{}
 	_, _ = w.Write([]byte("hello"))
@@ -81,6 +85,7 @@ func TestWriterWrite(t *testing.T) {
 		t.Errorf("expected 'hello' in buffer, got:\n%s", w.String())
 	}
 }
+
 func TestWriterIntegration(t *testing.T) {
 	w := &Writer{}
 	w.Set("GREETING", "Hello World")
@@ -103,6 +108,7 @@ func TestWriterIntegration(t *testing.T) {
 		t.Errorf("expected DEBUG unset, got %q", got)
 	}
 }
+
 func runScript(t *testing.T, script string) string {
 	t.Helper()
 	if runtime.GOOS == "windows" {
@@ -122,6 +128,7 @@ func runScript(t *testing.T, script string) string {
 	}
 	return runWith(t, bash, script)
 }
+
 func runWith(t *testing.T, bash string, script string) string {
 	t.Helper()
 	cmd := exec.Command(bash, "-c", script)
